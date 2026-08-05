@@ -12,26 +12,33 @@ import Checkout from "../pages/Checkout/Checkout";
 import Orders from "../pages/Orders/Orders";
 import Admin from "../pages/Admin/Admin";
 import NotFound from "../pages/NotFound/NotFound";
+import Layout from "../components/layout/Layout";
 
-function AppRouter(){
-    return(
-        <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/products" element={<Products/>}/>
-            <Route path="/products/:productId" element={<ProductDetails/>}/>
-            <Route path="/cart" element={<Cart/>}/>
-            <Route path="/wishlist" element={<Wishlist/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/register" element={<Register/>}/>
-            <Route path="/profile" element={<Profile/>}/>
-            <Route path="/checkout" element={<Checkout/>}/>
-            <Route path="/orders" element={<Orders/>}/>
-            <Route path="/admin" element={<Admin/>}/>
-            <Route path="*" element={<NotFound/>}/>
-        </Routes>
-        </BrowserRouter>
-    );
+function AppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Layout Routes */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:productId" element={<ProductDetails />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="wishlist" element={<Wishlist />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="checkout" element={<Checkout />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="admin" element={<Admin />} />
+        </Route>
+
+        {/* 404 Route */}
+        <Route path="*" element={<NotFound />} />
+
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default AppRouter;
