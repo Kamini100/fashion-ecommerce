@@ -10,8 +10,9 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
-      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+    <header>
+
+      <nav className="flex items-center justify-between px-6 py-4">
 
         {/* Logo */}
         <Logo />
@@ -38,8 +39,13 @@ function Navbar() {
           className="rounded-md p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
           aria-label="Toggle navigation menu"
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {isMenuOpen ? (
+            <X size={24} />
+          ) : (
+            <Menu size={24} />
+          )}
         </button>
+
       </nav>
 
       {/* Mobile Menu */}
@@ -61,12 +67,9 @@ function Navbar() {
 
         </div>
       )}
+
     </header>
   );
 }
 
 export default Navbar;
-
-/*
-useState - stores whether the mobile menu is open.
-*/
