@@ -29,7 +29,7 @@ function AppRouter() {
           <Route path="register" element={<Register />} />
           <Route path="profile" element={<Profile />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="orders" element={<Orders />} />
+          <Route path="orders/:orderId" element={<Orders />} />
           <Route path="admin" element={<Admin />} />
         </Route>
 

@@ -1,7 +1,8 @@
-import { useParams } from "react-router-dom"; // ⭐ ADDED
+import { Link, useParams } from "react-router-dom"; // ⭐ ADDED
 import { useState } from "react";
 import products from "../../constants/products"; // ⭐ ADDED
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 
 function ProductDetails() {
   // ⭐ ADDED: Get product ID from URL
@@ -13,6 +14,9 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
 
   const { addToCart } = useCart();
+  // ⭐ ADDED: Wishlist functions
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+
   // ⭐ ADDED
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -26,6 +30,15 @@ function ProductDetails() {
     }
 
     addToCart(product, quantity, selectedSize, selectedColor);
+  };
+
+  // ⭐ ADDED: Wishlist handler
+  const handleWishlist = () => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
   };
 
   // ⭐ ADDED: Find matching product
@@ -52,6 +65,15 @@ function ProductDetails() {
 
   return (
     <main className="section">
+      {/* ⭐ ADDED: Back to Products */}
+      <div className="mb-6">
+        <Link
+          to="/products"
+          className="inline-flex items-center text-sm font-medium text-gray-500 transition hover:text-pink-500"
+        >
+          ← Back to Products
+        </Link>
+      </div>
       <div className="container">
         {/* ⭐ ADDED: Product Details Layout */}
         <div className="grid gap-10 lg:grid-cols-2">
@@ -82,7 +104,10 @@ function ProductDetails() {
                 ⭐ {product.rating}
               </span>
 
-              <span className="text-sm text-gray-500">Customer Rating</span>
+              {/* ⭐ CHANGED: Show review count */}
+              <span className="text-sm text-gray-500">
+                {product.reviews} Reviews
+              </span>
             </div>
 
             {/* Price */}
@@ -187,13 +212,30 @@ function ProductDetails() {
             </div>
 
             {/* ⭐ ADDED: Add to Cart Button */}
-            <div className="mt-8">
+            {/* ⭐ CHANGED: Add to Cart + Wishlist Buttons */}
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              {/* Add to Cart */}
               <button
                 type="button"
                 onClick={handleAddToCart}
                 className="w-full rounded-md bg-pink-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-pink-600 sm:w-auto"
               >
                 Add to Cart
+              </button>
+
+              {/* ⭐ ADDED: Wishlist Button */}
+              <button
+                type="button"
+                onClick={handleWishlist}
+                className={`flex w-full items-center justify-center gap-2 rounded-md border px-6 py-3 text-sm font-semibold transition sm:w-auto ${
+                  isInWishlist(product.id)
+                    ? "border-pink-500 bg-pink-50 text-pink-500"
+                    : "border-gray-300 text-gray-700 hover:border-pink-500 hover:text-pink-500"
+                }`}
+              >
+                {isInWishlist(product.id)
+                  ? "♥ Remove from Wishlist"
+                  : "♡ Add to Wishlist"}
               </button>
             </div>
 
@@ -204,6 +246,52 @@ function ProductDetails() {
               <p className="mt-3 leading-7 text-gray-500">
                 {product.description}
               </p>
+            </div>
+            {/* ⭐ ADDED: Product Highlights */}
+            <div className="mt-8 border-t border-gray-200 pt-6">
+              <h2 className="font-semibold text-gray-900">
+                Product Highlights
+              </h2>
+
+              <ul className="mt-4 space-y-3 text-sm text-gray-600">
+                <li>✓ Premium quality material</li>
+                <li>✓ Comfortable and stylish design</li>
+                <li>✓ Easy to maintain</li>
+                <li>✓ Suitable for everyday use</li>
+              </ul>
+            </div>
+            {/* ⭐ ADDED: Delivery & Return Information */}
+            <div className="mt-8 grid gap-4 border-t border-gray-200 pt-6 sm:grid-cols-3">
+              {/* Free Delivery */}
+              <div className="rounded-lg bg-gray-50 p-4">
+                <h3 className="font-semibold text-gray-900">
+                  🚚 Free Delivery
+                </h3>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Free delivery on eligible orders.
+                </p>
+              </div>
+
+              {/* Easy Returns */}
+              <div className="rounded-lg bg-gray-50 p-4">
+                <h3 className="font-semibold text-gray-900">↩ Easy Returns</h3>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Easy returns within 7 days.
+                </p>
+              </div>
+
+              {/* Secure Payment */}
+              <div className="rounded-lg bg-gray-50 p-4">
+                <h3 className="font-semibold text-gray-900">
+                  🔒 Secure Payment
+                </h3>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Safe and secure checkout.
+                </p>
+              </div>
             </div>
           </div>
         </div>

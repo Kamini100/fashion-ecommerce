@@ -8,18 +8,13 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
   // ⭐ Add product to cart
-  const addToCart = (
-    product,
-    quantity = 1,
-    size = "",
-    color = ""
-  ) => {
+  const addToCart = (product, quantity = 1, size = "", color = "") => {
     setCartItems((previousItems) => {
       const existingItem = previousItems.find(
         (item) =>
           item.product.id === product.id &&
           item.size === size &&
-          item.color === color
+          item.color === color,
       );
 
       // ⭐ If same product + same variant already exists
@@ -32,7 +27,7 @@ export function CartProvider({ children }) {
                 ...item,
                 quantity: item.quantity + quantity,
               }
-            : item
+            : item,
         );
       }
 
@@ -53,9 +48,7 @@ export function CartProvider({ children }) {
   // ⭐ Remove product from cart
   const removeFromCart = (cartItemId) => {
     setCartItems((previousItems) =>
-      previousItems.filter(
-        (item) => item.id !== cartItemId
-      )
+      previousItems.filter((item) => item.id !== cartItemId),
     );
   };
 
@@ -65,18 +58,18 @@ export function CartProvider({ children }) {
 
     setCartItems((previousItems) =>
       previousItems.map((item) =>
-        item.id === cartItemId
-          ? { ...item, quantity }
-          : item
-      )
+        item.id === cartItemId ? { ...item, quantity } : item,
+      ),
     );
   };
 
+  // ⭐ ADDED: Clear entire cart
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   // ⭐ Calculate total number of products
-  const cartCount = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -86,6 +79,7 @@ export function CartProvider({ children }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
       }}
     >
       {children}

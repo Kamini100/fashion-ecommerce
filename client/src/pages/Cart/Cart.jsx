@@ -238,13 +238,13 @@ function Cart() {
               </div>
             )}
 
-            {/* Place Order */}
-            <button
-              type="button"
-              className="mt-6 w-full rounded-md bg-pink-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-pink-600"
+            {/* ⭐ CHANGED: Proceed to Checkout */}
+            <Link
+              to="/checkout"
+              className="mt-6 flex w-full items-center justify-center rounded-md bg-pink-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-pink-600"
             >
-              Place Order
-            </button>
+              Proceed to Checkout
+            </Link>
           </div>
         </div>
       </div>
