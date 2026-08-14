@@ -30,6 +30,22 @@ function Checkout() {
       [name]: value,
     }));
   };
+  // ⭐ ADDED: Calculate checkout totals
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.product.discountPrice * item.quantity,
+    0,
+  );
+
+  const originalTotal = cartItems.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0,
+  );
+
+  const totalDiscount = originalTotal - subtotal;
+
+  const deliveryFee = subtotal >= 999 ? 0 : 99;
+
+  const totalAmount = subtotal + deliveryFee;
 
   // ⭐ CHANGED: Create order
   const handleSubmit = (event) => {
@@ -112,23 +128,6 @@ function Checkout() {
       </main>
     );
   }
-
-  // ⭐ ADDED: Calculate checkout totals
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.product.discountPrice * item.quantity,
-    0,
-  );
-
-  const originalTotal = cartItems.reduce(
-    (total, item) => total + item.product.price * item.quantity,
-    0,
-  );
-
-  const totalDiscount = originalTotal - subtotal;
-
-  const deliveryFee = subtotal >= 999 ? 0 : 99;
-
-  const totalAmount = subtotal + deliveryFee;
 
   return (
     <main className="section">

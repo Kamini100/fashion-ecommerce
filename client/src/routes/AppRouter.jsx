@@ -13,6 +13,7 @@ import Orders from "../pages/Orders/Orders";
 import Admin from "../pages/Admin/Admin";
 import NotFound from "../pages/NotFound/NotFound";
 import Layout from "../components/layout/Layout";
+import ProtectedRoute from "./ProtectedRoute";
 
 function AppRouter() {
   return (
@@ -27,8 +28,11 @@ function AppRouter() {
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+        <Route element={<ProtectedRoute/>}>
           <Route path="profile" element={<Profile />} />
           <Route path="checkout" element={<Checkout />} />
+          <Route path="orders" element={<Orders/>}/>
+        </Route>
           <Route path="orders/:orderId" element={<Orders />} />
           <Route path="admin" element={<Admin />} />
         </Route>
