@@ -5,7 +5,8 @@ import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const {login} = useAuth();
+
+  const { login } = useAuth();
 
   // ⭐ Form state
   const [formData, setFormData] = useState({
@@ -19,6 +20,9 @@ function Login() {
   // ⭐ Error message
   const [error, setError] = useState("");
 
+  // ⭐ ADDED: Loading state
+  const [isLoading, setIsLoading] = useState(false);
+
   // ⭐ Handle input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -31,8 +35,8 @@ function Login() {
     setError("");
   };
 
-  // ⭐ Handle login
-  const handleSubmit = (event) => {
+  // ⭐ CHANGED: Handle login using backend API
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!formData.email || !formData.password) {
@@ -40,33 +44,46 @@ function Login() {
       return;
     }
 
-    // ⭐ Get registered user
-    const savedUser = JSON.parse(
-      localStorage.getItem("registeredUser") || "null"
-    );
+    setError("");
+    setIsLoading(true);
 
-    if (!savedUser) {
-      setError("No registered account found. Please register first.");
-      return;
+    try {
+      // ⭐ ADDED: Send login request to backend
+      const response = await fetch(
+        "http://localhost:5000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      // ⭐ ADDED: Handle backend error
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // ⭐ ADDED: Save JWT token
+      localStorage.setItem("token", data.token);
+
+      // ⭐ ADDED: Save logged-in user
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // ⭐ ADDED: Update AuthContext immediately
+      login(data.user);
+
+      // ⭐ Go to profile after successful login
+      navigate("/profile");
+
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
-
-    // ⭐ Check login credentials
-    if (
-      formData.email !== savedUser.email ||
-      formData.password !== savedUser.password
-    ) {
-      setError("Invalid email or password.");
-      return;
-    }
-
-    // ⭐ Save login state
-    login({
-  fullName: savedUser.fullName,
-  email: savedUser.email,
-});
-
-    // ⭐ Go to profile after login
-    navigate("/profile");
   };
 
   return (
@@ -122,6 +139,7 @@ function Login() {
 
               {/* Password */}
               <div>
+
                 <div className="flex items-center justify-between">
 
                   <label
@@ -174,6 +192,7 @@ function Login() {
                   </button>
 
                 </div>
+
               </div>
 
               {/* Error */}
@@ -186,9 +205,10 @@ function Login() {
               {/* Login Button */}
               <button
                 type="submit"
-                className="w-full rounded-md bg-pink-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-pink-600"
+                disabled={isLoading}
+                className="w-full rounded-md bg-pink-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Login
+                {isLoading ? "Logging in..." : "Login"}
               </button>
 
             </form>
